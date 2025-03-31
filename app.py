@@ -80,7 +80,8 @@ else:
     st.sidebar.title("Dashboard")
     user_path = ensure_user_dir(st.session_state.username)
     code_files = os.listdir(user_path)
-    selected_file = st.sidebar.selectbox("Select file", ["New File"] + code_files)
+    
+    selected_file = st.sidebar.selectbox("Select file", code_files + ["New File"])
     
     if st.sidebar.button("Logout"):
         st.session_state.authenticated = False
@@ -89,16 +90,20 @@ else:
     
     st.subheader(f"Welcome, {st.session_state.username}")
     
-    code_content = "" if selected_file == "New File" else open(os.path.join(user_path, selected_file)).read()
+    if selected_file == "New File":
+        filename = st.text_input("New Filename", value="script.py")
+        code_content = ""
+    else:
+        filename = selected_file
+        code_content = open(os.path.join(user_path, selected_file)).read()
+    
     code = st.text_area("Your Code", value=code_content, height=250)
-    filename = st.text_input("Filename", value=selected_file if selected_file != "New File" else "script.py")
     
     if st.button("Save Code"):
         with open(os.path.join(user_path, filename), "w") as f:
             f.write(code)
-        st.success("Code saved successfully!")
-
-
+        st.success(f"{filename} saved successfully!")
+        st.rerun()
     
     if st.button("Run Code"):
         output = run_code(code)
