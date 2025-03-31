@@ -62,7 +62,7 @@ with tab1:
             st.session_state.authenticated = True
             st.session_state.username = username
             st.success("Logged in successfully!")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Invalid username or password")
 
@@ -99,4 +99,4 @@ if st.session_state.authenticated:
     if st.button("Logout"):
         st.session_state.authenticated = False
         st.session_state.username = ""
-        st.experimental_rerun()
+        st.rerun()
